@@ -1,0 +1,46 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="GodotVFXnm"
+run/main_scene="res://scene/Main.tscn"
+config/features=PackedStringArray("4.1", "Forward Plus")
+run/max_fps=60
+config/icon="res://icons/icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
+shading/overrides/force_vertex_shading=true
+2d/overrides/force_vertex_shading=true
+2d/screen_space_reflection/roughness_quality=1
+2d/glow/upscale_mode=1
+2d/ssil/blur_passes=4
+2d/ssil/half_size=true
+2d/ssil/quality=2
+
+[shader_globals]
+
+refl={
+"type": "bool",
+"value": true
+}
+res={
+"type": "int",
+"value": 1
+}

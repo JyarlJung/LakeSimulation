@@ -1,0 +1,779 @@
+[gd_scene load_steps=52 format=3 uid="uid://o3hwislai1u3"]
+
+[ext_resource type="Script" path="res://script/manager.gd" id="1_jxdka"]
+[ext_resource type="Material" uid="uid://f1hgkafnlwrc" path="res://material/rain_drop.tres" id="1_kjxga"]
+[ext_resource type="Shader" path="res://material/shader/sky.gdshader" id="1_nwuxb"]
+[ext_resource type="Script" path="res://script/follow.gd" id="1_sslp5"]
+[ext_resource type="PackedScene" uid="uid://263k5snp64ld" path="res://scene/ball.tscn" id="2_hcwlu"]
+[ext_resource type="Script" path="res://script/sun.gd" id="2_pq4xx"]
+[ext_resource type="Script" path="res://script/water.gd" id="4_0gfkl"]
+[ext_resource type="Script" path="res://script/fps_counter.gd" id="4_1kubm"]
+[ext_resource type="Shader" path="res://material/shader/water.gdshader" id="6_qjfsy"]
+[ext_resource type="Shader" path="res://material/shader/simulation_buffer.gdshader" id="7_3d6nb"]
+[ext_resource type="Texture2D" uid="uid://dl5bc88a6iyic" path="res://icons/res.png" id="7_3kch4"]
+[ext_resource type="FontFile" uid="uid://dlu5ngjxggy6q" path="res://Fonts/Galmuri7.ttf" id="7_ealfo"]
+[ext_resource type="Script" path="res://script/water_collision.gd" id="7_rykkd"]
+[ext_resource type="Material" uid="uid://d3l7mdmfy02kn" path="res://material/water_far.tres" id="7_xyl7x"]
+[ext_resource type="Texture2D" uid="uid://bya4nr30xqekx" path="res://icons/ref.png" id="8_0epu8"]
+[ext_resource type="Shader" path="res://material/shader/simulation.gdshader" id="8_20gwu"]
+[ext_resource type="Script" path="res://script/boat.gd" id="11_yago0"]
+[ext_resource type="PackedScene" uid="uid://cy35mcd06cxrf" path="res://model/mt0.blend" id="14_k2ncb"]
+[ext_resource type="Texture2D" uid="uid://twl6ogvbhgid" path="res://icons/fast.png" id="14_yncvk"]
+[ext_resource type="Texture2D" uid="uid://vdyqi0l5oywf" path="res://icons/throw.png" id="15_ltiux"]
+[ext_resource type="Texture2D" uid="uid://bi31oh6fuk57s" path="res://icons/fog.png" id="18_p45fn"]
+[ext_resource type="Texture2D" uid="uid://iob7stnbw0x4" path="res://icons/rain.png" id="19_jmvpr"]
+
+[sub_resource type="Curve" id="Curve_us88i"]
+_data = [Vector2(0, 0.5), 0.0, 6.875, 0, 0, Vector2(0.0813397, 1), 0.0, 0.0, 0, 0, Vector2(0.285486, 0.768421), -3.3, -3.3, 0, 0, Vector2(0.488038, 0), 0.0, 0.0, 0, 0, Vector2(0.939394, 0), 0.0, 0.0, 0, 0, Vector2(1, 0.505263), 14.7231, 0.0, 0, 0]
+point_count = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_8r2xn"]
+font = ExtResource("7_ealfo")
+font_size = 8
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6l64s"]
+emission_shape = 3
+emission_box_extents = Vector3(14, 0, 8)
+direction = Vector3(-0.3, -1, -0.3)
+spread = 3.0
+initial_velocity_min = 30.0
+initial_velocity_max = 40.0
+collision_mode = 2
+
+[sub_resource type="SphereMesh" id="SphereMesh_oar22"]
+material = ExtResource("1_kjxga")
+radius = 0.03
+height = 0.8
+radial_segments = 4
+rings = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1fij8"]
+shader = ExtResource("1_nwuxb")
+shader_parameter/day_top_color = Color(0.321569, 0.439216, 0.768627, 1)
+shader_parameter/day_bottom_color = Color(0.517647, 0.776471, 0.890196, 1)
+shader_parameter/sunset_top_color = Color(0.364706, 0.321569, 0.768627, 1)
+shader_parameter/sunset_bottom_color = Color(1, 0.282353, 0.141176, 1)
+shader_parameter/night_top_color = Color(0.0196078, 0, 0.0784314, 1)
+shader_parameter/night_bottom_color = Color(0.0392157, 0, 0.141176, 1)
+shader_parameter/horizon_color = Color(0.478431, 0.505882, 0.619608, 1)
+shader_parameter/horizon_blur = 0.1
+shader_parameter/sun_color = Color(10, 8, 6, 1)
+shader_parameter/sun_sunset_color = Color(9, 2, 0, 1)
+shader_parameter/sun_size = 0.03
+shader_parameter/sun_blur = 1.0
+shader_parameter/moon_color = Color(1, 0.95, 0.7, 1)
+shader_parameter/moon_size = 0.03
+shader_parameter/moon_blur = 0.05
+shader_parameter/clouds_edge_color = Color(0.901961, 0.901961, 1, 1)
+shader_parameter/clouds_top_color = Color(1, 1, 1, 1)
+shader_parameter/clouds_middle_color = Color(0.92, 0.92, 0.98, 1)
+shader_parameter/clouds_bottom_color = Color(0.784314, 0.784314, 0.890196, 1)
+shader_parameter/clouds_speed = 2.0
+shader_parameter/clouds_direction = 0.2
+shader_parameter/clouds_scale = 2.0
+shader_parameter/clouds_cutoff = 0.4
+shader_parameter/clouds_fuzziness = 0.4
+shader_parameter/clouds_blur = 0.25
+shader_parameter/stars_speed = 1.0
+shader_parameter/overwritten_time = 0.0
+
+[sub_resource type="Sky" id="Sky_50stc"]
+sky_material = SubResource("ShaderMaterial_1fij8")
+
+[sub_resource type="Environment" id="Environment_g3bfv"]
+background_mode = 2
+sky = SubResource("Sky_50stc")
+fog_enabled = true
+fog_light_color = Color(0.615686, 0.654902, 0.721569, 1)
+fog_density = 0.0
+fog_sky_affect = 0.0
+adjustment_brightness = 1.52
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_3w6dq"]
+size = Vector2(30, 60)
+subdivide_width = 40
+subdivide_depth = 80
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_f5aas"]
+noise_type = 3
+seed = 1
+fractal_octaves = 3
+fractal_gain = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u1pmg"]
+seamless = true
+noise = SubResource("FastNoiseLite_f5aas")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3a8he"]
+noise_type = 3
+frequency = 0.06
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7i7e6"]
+seamless = true
+as_normal_map = true
+bump_strength = 2.0
+noise = SubResource("FastNoiseLite_3a8he")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_etk21"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("6_qjfsy")
+shader_parameter/water_color = Color(0.12, 0.25, 0.32, 1)
+shader_parameter/border_color = Color(0.894118, 0.921569, 0.952941, 1)
+shader_parameter/border_scale = 0.0
+shader_parameter/roughness = 0.05
+shader_parameter/specular = 0.5
+shader_parameter/fade_distance = 5.0
+shader_parameter/move_vec = Vector2(1, 1)
+shader_parameter/height_strength = 0.1
+shader_parameter/height_tex = SubResource("NoiseTexture2D_u1pmg")
+shader_parameter/normal_move_vec = Vector2(-0.2, 0.1)
+shader_parameter/normal_strength = 0.0
+shader_parameter/refraction_value = 0.05
+shader_parameter/wave_tex = SubResource("NoiseTexture2D_7i7e6")
+shader_parameter/ssr_max_travel = 512
+shader_parameter/step_pixel_size = 1.0
+shader_parameter/depth_tolerance = 0.2
+shader_parameter/collision_size = Vector2(512, 1024)
+shader_parameter/subdivision = Vector2(1, 1)
+shader_parameter/splash_strength = 1.5
+shader_parameter/depth_clip = 60.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_l7m1s"]
+size = Vector2(60, 60)
+subdivide_width = 1
+subdivide_depth = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yd050"]
+resource_local_to_scene = true
+shader = ExtResource("7_3d6nb")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e1jrq"]
+resource_local_to_scene = true
+shader = ExtResource("8_20gwu")
+shader_parameter/size = null
+shader_parameter/phase = 0.3
+shader_parameter/attenuation = 0.996
+shader_parameter/deltaUV = 0.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pomyx"]
+size = Vector3(2.93, 0.4, 1.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gfrf7"]
+albedo_color = Color(0.490196, 0.345098, 0.239216, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0o6jw"]
+material = SubResource("StandardMaterial3D_gfrf7")
+top_radius = 0.16
+bottom_radius = 0.16
+height = 3.0
+radial_segments = 6
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_526au"]
+material = SubResource("StandardMaterial3D_gfrf7")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 2.5
+radial_segments = 4
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_hf3pj"]
+size = Vector3(1.2, 1.8, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7f4ma"]
+shading_mode = 0
+albedo_color = Color(1, 0.945098, 0.792157, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_1tmao"]
+material = SubResource("StandardMaterial3D_7f4ma")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5l0nw"]
+albedo_color = Color(0.337255, 0.231373, 0.152941, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t2qtg"]
+material = SubResource("StandardMaterial3D_5l0nw")
+size = Vector3(10, 0.4, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cwhk4"]
+material = SubResource("StandardMaterial3D_5l0nw")
+size = Vector3(0.2, 5, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tpiq7"]
+albedo_color = Color(0.113725, 0.12549, 0.176471, 1)
+roughness = 0.25
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ghsgv"]
+material = SubResource("StandardMaterial3D_tpiq7")
+top_radius = 0.08
+bottom_radius = 0.08
+height = 3.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_51tsm"]
+material = SubResource("StandardMaterial3D_7f4ma")
+radius = 0.2
+height = 0.4
+
+[node name="Stage" type="Node3D" node_paths=PackedStringArray("env", "water")]
+script = ExtResource("1_jxdka")
+env = NodePath("WorldEnvironment")
+fog_curve = SubResource("Curve_us88i")
+water = NodePath("Water")
+ball = ExtResource("2_hcwlu")
+
+[node name="Ui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="Ui"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -130.0
+offset_top = -40.0
+offset_right = -90.0
+grow_horizontal = 2
+grow_vertical = 0
+toggle_mode = true
+icon = ExtResource("14_yncvk")
+
+[node name="Button2" type="Button" parent="Ui"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -86.0
+offset_top = -40.0
+offset_right = -46.0
+grow_horizontal = 2
+grow_vertical = 0
+icon = ExtResource("15_ltiux")
+
+[node name="Button3" type="Button" parent="Ui"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -42.0
+offset_top = -40.0
+offset_right = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+toggle_mode = true
+icon = ExtResource("18_p45fn")
+
+[node name="Button4" type="Button" parent="Ui"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -40.0
+offset_right = 42.0
+grow_horizontal = 2
+grow_vertical = 0
+toggle_mode = true
+icon = ExtResource("19_jmvpr")
+
+[node name="Button5" type="Button" parent="Ui"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 46.0
+offset_top = -40.0
+offset_right = 86.0
+grow_horizontal = 2
+grow_vertical = 0
+toggle_mode = true
+icon = ExtResource("7_3kch4")
+
+[node name="Button6" type="Button" parent="Ui"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 90.0
+offset_top = -40.0
+offset_right = 130.0
+grow_horizontal = 2
+grow_vertical = 0
+toggle_mode = true
+icon = ExtResource("8_0epu8")
+
+[node name="Label" type="Label" parent="Ui"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 52.0
+offset_bottom = 27.0
+text = "60fps"
+label_settings = SubResource("LabelSettings_8r2xn")
+script = ExtResource("4_1kubm")
+
+[node name="Layout" type="Node3D" parent="." node_paths=PackedStringArray("object")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.17, 3.5, 32)
+script = ExtResource("1_sslp5")
+object = NodePath("../Boat")
+
+[node name="Camera" type="Camera3D" parent="Layout"]
+transform = Transform3D(1, 0, 0, 0, 0.994522, 0.104528, 0, -0.104528, 0.994522, 0, 0, 0)
+current = true
+
+[node name="Rain" type="Node3D" parent="Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, -10)
+
+[node name="Particles" type="GPUParticles3D" parent="Layout/Rain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+layers = 4
+lifetime = 0.5
+preprocess = 0.5
+fixed_fps = 15
+visibility_aabb = AABB(-14, -15, -10, 28, 15, 16)
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_6l64s")
+draw_pass_1 = SubResource("SphereMesh_oar22")
+
+[node name="CollisionBox" type="GPUParticlesCollisionBox3D" parent="Layout/Rain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.5, 0)
+size = Vector3(30, 2, 30)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_g3bfv")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.708339, -0.116502, -0.696191, -8.62238e-08, -0.986286, 0.165048, -0.705871, -0.11691, -0.698626, 0, 10, 0)
+sky_mode = 2
+script = ExtResource("2_pq4xx")
+_time = 0.0
+
+[node name="Moon" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.245307, -0.969445, 0, 0.969445, -0.245307, 0, 10, 0)
+light_color = Color(1, 0.945098, 0.870588, 1)
+light_energy = 0.1
+script = ExtResource("2_pq4xx")
+_time = 0.5
+
+[node name="Water" type="Node3D" parent="." node_paths=PackedStringArray("mesh", "rain", "vp_collision", "vp_simul", "vp_buffer")]
+script = ExtResource("4_0gfkl")
+mesh = NodePath("Meshes/Mesh1-1")
+rain = NodePath("../Layout/Rain/Particles")
+mesh_size = Vector2(30, 60)
+subdivision = Vector2i(1, 1)
+collision_size = Vector2i(512, 1024)
+vp_collision = NodePath("Collision")
+vp_simul = NodePath("Simulation")
+vp_buffer = NodePath("SimulationBuffer")
+
+[node name="Meshes" type="Node3D" parent="Water"]
+
+[node name="Mesh1-1" type="MeshInstance3D" parent="Water/Meshes"]
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Mesh1-2" type="MeshInstance3D" parent="Water/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Mesh1-3" type="MeshInstance3D" parent="Water/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, 0)
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Mesh1-4" type="MeshInstance3D" parent="Water/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90, 0, 0)
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Mesh1-5" type="MeshInstance3D" parent="Water/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 0, 0)
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Mesh1-6" type="MeshInstance3D" parent="Water/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 150, 0, 0)
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Mesh1-7" type="MeshInstance3D" parent="Water/Meshes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180, 0, 0)
+layers = 3
+mesh = SubResource("PlaneMesh_3w6dq")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_etk21")
+
+[node name="Meshes_far" type="Node3D" parent="Water"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 15)
+
+[node name="Mesh1-1" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 0, -75)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh1-2" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -75)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh1-3" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, -75)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh1-4" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 0, -75)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh1-5" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180, 0, -75)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh2-1" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 0, -135)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh2-2" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -135)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh2-3" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, -135)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh2-4" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 0, -135)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh2-5" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180, 0, -135)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh3-1" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 0, -195)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh3-2" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -195)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh3-3" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, -195)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh3-4" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 0, -195)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh3-5" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180, 0, -195)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh4-1" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -255)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh4-2" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180, 0, -255)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="Mesh4-3" type="MeshInstance3D" parent="Water/Meshes_far"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120, 0, -255)
+layers = 3
+mesh = SubResource("PlaneMesh_l7m1s")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("7_xyl7x")
+
+[node name="SimulationBuffer" type="SubViewport" parent="Water"]
+size = Vector2i(512, 1024)
+render_target_clear_mode = 2
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="Water/SimulationBuffer"]
+material = SubResource("ShaderMaterial_yd050")
+offset_right = 512.0
+offset_bottom = 1024.0
+color = Color(0, 0, 0, 1)
+
+[node name="Simulation" type="SubViewport" parent="Water"]
+size = Vector2i(512, 1024)
+render_target_clear_mode = 2
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="Water/Simulation"]
+material = SubResource("ShaderMaterial_e1jrq")
+offset_right = 512.0
+offset_bottom = 1024.0
+color = Color(0, 0, 0, 1)
+
+[node name="Collision" type="SubViewport" parent="Water"]
+handle_input_locally = false
+canvas_item_default_texture_repeat = 1
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="Water/Collision"]
+offset_right = 512.0
+offset_bottom = 512.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("7_rykkd")
+
+[node name="Boat" type="RigidBody3D" parent="." node_paths=PackedStringArray("head", "water", "probes")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 22)
+mass = 5.0
+script = ExtResource("11_yago0")
+accel = 10.0
+head = NodePath("Head")
+specific_gravity = 0.5
+water = NodePath("../Water")
+probes = NodePath("Probes")
+
+[node name="Shape" type="CollisionShape3D" parent="Boat"]
+shape = SubResource("BoxShape3D_pomyx")
+
+[node name="Head" type="Node3D" parent="Boat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="Probes" type="Node3D" parent="Boat"]
+
+[node name="Head" type="Marker3D" parent="Boat/Probes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.36051, 0, 0)
+gizmo_extents = 0.2
+
+[node name="Forward" type="Marker3D" parent="Boat/Probes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.524496, 0, 0.8)
+gizmo_extents = 0.2
+
+[node name="Forward2" type="Marker3D" parent="Boat/Probes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.524496, 0, -0.8)
+gizmo_extents = 0.2
+
+[node name="Back" type="Marker3D" parent="Boat/Probes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.33043, 0, 0.700001)
+gizmo_extents = 0.2
+
+[node name="Back2" type="Marker3D" parent="Boat/Probes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.33043, 0, -0.700001)
+gizmo_extents = 0.2
+
+[node name="mesh" type="Node3D" parent="Boat"]
+
+[node name="wood" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -0.739847)
+mesh = SubResource("CylinderMesh_0o6jw")
+skeleton = NodePath("../../..")
+
+[node name="wood2" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -0.433008)
+mesh = SubResource("CylinderMesh_0o6jw")
+skeleton = NodePath("../..")
+
+[node name="wood3" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0.166925)
+mesh = SubResource("CylinderMesh_0o6jw")
+skeleton = NodePath("../..")
+
+[node name="wood4" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -0.138094)
+mesh = SubResource("CylinderMesh_0o6jw")
+skeleton = NodePath("../../..")
+
+[node name="wood5" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0.757931)
+mesh = SubResource("CylinderMesh_0o6jw")
+skeleton = NodePath("../..")
+
+[node name="wood6" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0.468807)
+mesh = SubResource("CylinderMesh_0o6jw")
+skeleton = NodePath("../../..")
+
+[node name="wood7" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21795, 0)
+mesh = SubResource("CylinderMesh_526au")
+skeleton = NodePath("../../..")
+
+[node name="wood8" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(0.457439, 0, -0.889241, 0, 1, 0, 0.889241, 0, 0.457439, 0, 1.56353, 0)
+mesh = SubResource("BoxMesh_hf3pj")
+skeleton = NodePath("../../..")
+
+[node name="wood9" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 1.27284, 0.389637, -0.726425)
+mesh = SubResource("CylinderMesh_526au")
+skeleton = NodePath("../../..")
+
+[node name="wood10" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-09, -1, 0, 0.1, -4.37114e-08, 1.27284, 0.720415, -0.632519)
+mesh = SubResource("CylinderMesh_526au")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27284, 0.543992, -0.525097)
+mesh = SubResource("SphereMesh_1tmao")
+skeleton = NodePath("../..")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Boat/mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27284, 0.545666, -0.525097)
+light_color = Color(1, 0.988235, 0.929412, 1)
+omni_range = 2.0
+
+[node name="wood11" type="MeshInstance3D" parent="Boat/mesh"]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 1.27284, 0.659427, -0.525097)
+mesh = SubResource("CylinderMesh_526au")
+skeleton = NodePath("../../..")
+
+[node name="Objects" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.0825, 0, 13.0192)
+
+[node name="Bg" type="Node3D" parent="Objects"]
+
+[node name="mt0" parent="Objects/Bg" instance=ExtResource("14_k2ncb")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 44.2975, 0, -132.259)
+
+[node name="Object" type="Node3D" parent="Objects"]
+
+[node name="wood" type="MeshInstance3D" parent="Objects/Object"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.1753, 0.265, 11.9582)
+mesh = SubResource("BoxMesh_t2qtg")
+skeleton = NodePath("../../..")
+
+[node name="wood" type="MeshInstance3D" parent="Objects/Object/wood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.73811, -1.94814, 1.4134)
+mesh = SubResource("BoxMesh_cwhk4")
+skeleton = NodePath("../../..")
+
+[node name="wood2" type="MeshInstance3D" parent="Objects/Object/wood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.73811, -1.94814, -1.25923)
+mesh = SubResource("BoxMesh_cwhk4")
+skeleton = NodePath("../../..")
+
+[node name="wood3" type="MeshInstance3D" parent="Objects/Object/wood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7224, -1.94814, 1.4134)
+mesh = SubResource("BoxMesh_cwhk4")
+skeleton = NodePath("../../..")
+
+[node name="wood4" type="MeshInstance3D" parent="Objects/Object/wood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7224, -1.94814, -1.25923)
+mesh = SubResource("BoxMesh_cwhk4")
+skeleton = NodePath("../../..")
+
+[node name="wood5" type="MeshInstance3D" parent="Objects/Object/wood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.307278, -1.94814, 1.4134)
+mesh = SubResource("BoxMesh_cwhk4")
+skeleton = NodePath("../../..")
+
+[node name="wood6" type="MeshInstance3D" parent="Objects/Object/wood"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.307278, -1.94814, -1.25923)
+mesh = SubResource("BoxMesh_cwhk4")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Objects/Object"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.4493, 1.74461, 11.3861)
+mesh = SubResource("CylinderMesh_ghsgv")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Objects/Object/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.53222, 0)
+mesh = SubResource("SphereMesh_51tsm")
+skeleton = NodePath("../..")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Objects/Object/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57797, 0)
+light_color = Color(1, 0.988235, 0.929412, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[connection signal="toggled" from="Ui/Button" to="." method="_on_fast_toggled"]
+[connection signal="button_up" from="Ui/Button2" to="." method="_on_ball_button_up"]
+[connection signal="toggled" from="Ui/Button3" to="." method="_on_fog_toggled"]
+[connection signal="toggled" from="Ui/Button4" to="." method="_on_rain_toggled"]
+[connection signal="toggled" from="Ui/Button5" to="." method="_on_res_toggled"]
+[connection signal="toggled" from="Ui/Button6" to="." method="_on_button_refl_toggled"]
