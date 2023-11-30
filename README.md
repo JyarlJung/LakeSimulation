@@ -19,6 +19,9 @@
 ## 프로젝트 여는법
 
 프로젝트 파일을 받은 후, 고도엔진 4.1.3(혹은 그 이상)에디터로 실행하면 됩니다. 블렌더 모델을 불러오기 위해서 에디터 설정-File System-Blender Path를 설정해주어야 합니다.
+![img](./expln.png)
+설정이 제대로 된 경우, 다음과 같이 프로젝트가 열립니다.
+![img](./expln2.png)
 
 ## Reference
 + https://github.com/JyarlJung/GodotWaterShader
