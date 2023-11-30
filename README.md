@@ -2,6 +2,8 @@
 - 완성된 게임(Windows, Andriod) : https://drive.google.com/drive/folders/1BHDHRbljeKXSZeiPwldDmfuKuaGNitom
 - 핵심 기술 코드 : https://github.com/JyarlJung/GodotWaterShader
 
+![img](./preview.png)
+
 ## 소개
 모바일에서 사실적인 물 표면을 나타내기 위한 렌더링 모델과 이를 활용한 캐주얼 시뮬레이션 게임입니다.
 
